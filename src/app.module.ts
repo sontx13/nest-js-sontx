@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
 
 @Module({
   //MongooseModule.forRoot('mongodb+srv://sontx13:Sonphuong1710@cluster0.bp5irmg.mongodb.net/?retryWrites=true&w=majority')
@@ -15,7 +16,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
             }),
             ConfigModule.forRoot({
               isGlobal:true
-            })  
+            }),
+            UsersModule  
             ],
   controllers: [AppController],
   providers: [AppService],
