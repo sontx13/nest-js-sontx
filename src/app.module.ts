@@ -4,9 +4,8 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { AuthModule } from './auth/auth.module';  
+import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 
 @Module({
   //MongooseModule.forRoot('mongodb+srv://sontx13:Sonphuong1710@cluster0.bp5irmg.mongodb.net/?retryWrites=true&w=majority')
@@ -14,6 +13,10 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
               imports: [ConfigModule],
               useFactory:async (configService:ConfigService) => ({
                 uri: configService.get<string>('MONGO_URL'),
+                connectionFactory: (connection) => {
+                  connection.plugin(softDeletePlugin);
+                  return connection;
+                }                  
               }),
               inject:[ConfigService]
             }),
