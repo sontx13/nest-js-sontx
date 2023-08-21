@@ -8,6 +8,7 @@ import { genSaltSync,hashSync,compareSync } from 'bcryptjs';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from './users.interface';
 import { User } from 'src/decorator/customize';
+import aqp from 'api-query-params';
 
 @Injectable()
 export class UsersService {
@@ -68,15 +69,42 @@ export class UsersService {
     return user;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(currentpage: number,limit: number,qs: string) {
+    const { filter, sort, population } = aqp(qs);
+    delete filter.page;
+    delete filter.limit;
+
+    let offset = (+currentpage - 1) * (+limit);
+    let defaultLimit = +limit ? +limit : 10;
+
+    const totalItems = (await this.userModel.find(filter)).length;
+    const totalPages = Math.ceil(totalItems / defaultLimit);
+
+    const result = await this.userModel.find(filter)
+    .skip(offset)
+    .limit(defaultLimit)
+    // @ts-ignore: Unreachable code error
+    .sort(sort)
+    .select("-password")
+    .populate(population)
+    .exec();
+
+    return {
+      meta: {
+      current: currentpage, //trang hiện tại
+      pageSize: limit, //số lượng bản ghi đã lấy
+      pages: totalPages, //tổng số trang với điều kiện query
+      total: totalItems // tổng số phần tử (số bản ghi)
+      },
+      result //kết quả query
+    }
   }
 
   findOne(id: string) {
     if(mongoose.Types.ObjectId.isValid(id)){
       let user = this.userModel.findOne({
         _id:id
-      })
+      }).select("-password");
       return user;
     }else{
       return `Not found user`;
@@ -104,7 +132,11 @@ export class UsersService {
     let newUser = await this.userModel.updateOne(
         {_id:updateUserDto._id},
         {
-          ...updateUserDto,
+          name: updateUserDto.name,
+          age: updateUserDto.age,
+          gender: updateUserDto.gender,
+          address: updateUserDto.address,
+          role:  updateUserDto.role,
           updatedBy:{
             _id:user._id,
             email:user.email
