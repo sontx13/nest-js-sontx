@@ -26,10 +26,10 @@ export class    CreateUserDto {
     age: number;
 
     @IsNotEmpty({message: 'Gender không được để trống'})
-    gender: number;
+    gender: string;
 
     @IsNotEmpty({message: 'Address không được để trống'})
-    address: number;
+    address: string;
 
     @IsNotEmpty({message: 'Role không được để trống'})
     role: string;
@@ -56,8 +56,8 @@ export class    RegisterUserDto {
     age: number;
 
     @IsNotEmpty({message: 'Gender không được để trống'})
-    gender: number;
+    gender: string;
 
     @IsNotEmpty({message: 'Address không được để trống'})
-    address: number;
+    address: string;
 }

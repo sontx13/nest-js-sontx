@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { IUser } from 'src/users/users.interface';
-
+import { RegisterUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
     constructor(private usersService: UsersService,
         private jwtService: JwtService
         ) {}
-
+    
     //username và password là 2 tham so passportjs nem ve
     async validateUser(username: string, pass: string): Promise<any> {
         const user = await this.usersService.findOneByUsername(username);
@@ -39,6 +39,16 @@ export class AuthService {
         name,
         email,
         role
+        };
+    }
+
+    async register(registerUserDto: RegisterUserDto) {
+        //console.log("registerUserDto=="+registerUserDto);
+        const newUser = await this.usersService.register(registerUserDto);
+
+        return {
+           _id: newUser?._id,
+           createdAt: newUser?.createdAt
         };
     }
         
