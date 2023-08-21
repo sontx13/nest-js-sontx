@@ -4,7 +4,7 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
 import { IUser } from 'src/users/users.interface';
-import { User } from 'src/decorator/customize';
+import { ResponseMessage, User } from 'src/decorator/customize';
 
 @Controller('companies')
 export class CompaniesController {
@@ -16,6 +16,7 @@ export class CompaniesController {
   }
 
   @Get()
+  @ResponseMessage("Fetch list company with paginate")
   findAll(@Query("page") currentpage: string,
   @Query("limit") limit: string,
   @Query() qs:string
