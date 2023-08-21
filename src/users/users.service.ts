@@ -165,4 +165,11 @@ export class UsersService {
       return `Not found user`;
     }
   }
+
+  updateUserToken = async (refreshToken: string, _id:string) => {
+    return await this.userModel.updateOne(
+      {_id},
+      {refreshToken}
+    )
+  } 
 }
