@@ -7,8 +7,8 @@ class Company{
     @IsNotEmpty({message: 'Id không được để trống'})
     _id: mongoose.Schema.Types.ObjectId;
 
-    @IsNotEmpty({message: 'Email không được để trống'})
-    email: string;
+    @IsNotEmpty({message: 'Name không được để trống'})
+    name: string;
 }
 
 export class    CreateUserDto {
