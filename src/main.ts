@@ -30,10 +30,11 @@ async function bootstrap() {
   app.use(cookieParser());
   //config cors
   app.enableCors({
-    "origin": "*",
+    "origin": true, // nếu là * là cho phép kết nối từ bất kỳ đâu
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
     "preflightContinue": false,
-    "optionsSuccessStatus": 204
+    "optionsSuccessStatus": 204,
+    credentials: true //cho phép client và server trao đổi cookies
   });
   //config version
   app.setGlobalPrefix('api');
