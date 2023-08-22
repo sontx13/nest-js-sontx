@@ -126,10 +126,16 @@ export class AuthService {
             }else{
                 throw new BadRequestException(`Refresh Token không hợp lệ. Vui lòng Login!`)
             }
-            console.log("user=="+user);
         } catch (error) {
             throw new BadRequestException(`Refresh Token không hợp lệ. Vui lòng Login!`)
         }
+    }
+
+    logout = async (user,response:Response) =>{
+        //update user with refresh token
+        await this.usersService.updateUserToken("",user._id.toString());
+        response.clearCookie('refresh_token');
+        return "ok";
     }
         
 }
