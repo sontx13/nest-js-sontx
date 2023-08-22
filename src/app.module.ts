@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';  
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { CompaniesModule } from './companies/companies.module';
+import { JobsModule } from './jobs/jobs.module';
 
 @Module({
   //MongooseModule.forRoot('mongodb+srv://sontx13:Sonphuong1710@cluster0.bp5irmg.mongodb.net/?retryWrites=true&w=majority')
@@ -26,7 +27,8 @@ import { CompaniesModule } from './companies/companies.module';
             }),
             UsersModule,
             AuthModule,
-            CompaniesModule  
+            CompaniesModule,
+            JobsModule  
             ],
   controllers: [AppController],
   providers: [AppService],
