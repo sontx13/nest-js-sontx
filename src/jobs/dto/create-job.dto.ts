@@ -9,6 +9,9 @@ class Company{
 
     @IsNotEmpty({message: 'Name Company không được để trống'})
     name: string;
+
+    @IsNotEmpty({message: 'Logo Company không được để trống'})
+    logo: string;
 }
 
 export class    CreateJobDto {
