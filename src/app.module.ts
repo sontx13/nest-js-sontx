@@ -12,6 +12,7 @@ import { FilesModule } from './files/files.module';
 import { ResumesModule } from './resumes/resumes.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
+import { DatabasesModule } from './databases/databases.module';
 
 @Module({
   //MongooseModule.forRoot('mongodb+srv://sontx13:Sonphuong1710@cluster0.bp5irmg.mongodb.net/?retryWrites=true&w=majority')
@@ -36,7 +37,8 @@ import { RolesModule } from './roles/roles.module';
             FilesModule,
             ResumesModule,
             PermissionsModule,
-            RolesModule  
+            RolesModule,
+            DatabasesModule  
             ],
   controllers: [AppController],
   providers: [AppService],
