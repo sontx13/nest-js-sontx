@@ -64,6 +64,9 @@ export class PermissionsService {
   }
 
   findOne(id: string) {
+    if(!mongoose.Types.ObjectId.isValid(id)){
+      throw new BadRequestException(`Not found permission with id: ${id} !`)
+    }
     return this.permissionModel.findOne({
       _id:id
     })
@@ -99,7 +102,7 @@ export class PermissionsService {
         _id:id
       });
     }else{
-      throw new BadRequestException(`Not found user with id: ${id} !`)
+      throw new BadRequestException(`Not found permission with id: ${id} !`)
     }
   }
 }
