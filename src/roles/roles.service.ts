@@ -99,6 +99,11 @@ export class RolesService {
 
   async remove(id: string,@User() user:IUser) {
     if(mongoose.Types.ObjectId.isValid(id)){
+      const foundUser = await this.roleModel.findById(id);
+      if(foundUser.name === "ADMIN"){
+        throw new BadRequestException("Không thể xoá quyền ADMIN")
+      }
+
       await this.roleModel.updateOne(
           {_id:id},
           {

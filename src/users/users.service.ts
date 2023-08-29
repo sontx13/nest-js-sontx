@@ -102,10 +102,11 @@ export class UsersService {
 
   findOne(id: string) {
     if(mongoose.Types.ObjectId.isValid(id)){
-      let user = this.userModel.findOne({
+      return this.userModel.findOne({
         _id:id
-      }).select("-password");
-      return user;
+      }).select("-password")
+      .populate({path:"role", select:{name:1,_id:1}})
+
     }else{
       return `Not found user`;
     }
@@ -114,7 +115,7 @@ export class UsersService {
   findOneByUsername(username: string) {
       let user = this.userModel.findOne({
         email:username
-      })
+      }).populate({path:"role",select:{name:1,permissions:1}})
       return user;
   }
 
@@ -148,6 +149,10 @@ export class UsersService {
 
   async remove(id: string,@User() user:IUser) {
     if(mongoose.Types.ObjectId.isValid(id)){
+      const foundUser = await this.userModel.findById(id);
+      if(foundUser.email === "admin@gmail.com"){
+        throw new BadRequestException("Không thể xoá tài khoản admin@gmail.com")
+      }
       await this.userModel.updateOne(
           {_id:id},
           {
