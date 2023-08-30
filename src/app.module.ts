@@ -15,10 +15,13 @@ import { RolesModule } from './roles/roles.module';
 import { DatabasesModule } from './databases/databases.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { MailModule } from './mail/mail.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   //MongooseModule.forRoot('mongodb+srv://sontx13:Sonphuong1710@cluster0.bp5irmg.mongodb.net/?retryWrites=true&w=majority')
-  imports: [MongooseModule.forRootAsync({
+  imports: [
+            ScheduleModule.forRoot(),
+            MongooseModule.forRootAsync({
               imports: [ConfigModule],
               useFactory:async (configService:ConfigService) => ({
                 uri: configService.get<string>('MONGO_URL'),
