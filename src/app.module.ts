@@ -14,6 +14,7 @@ import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
 import { DatabasesModule } from './databases/databases.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   //MongooseModule.forRoot('mongodb+srv://sontx13:Sonphuong1710@cluster0.bp5irmg.mongodb.net/?retryWrites=true&w=majority')
@@ -40,7 +41,8 @@ import { SubscribersModule } from './subscribers/subscribers.module';
             PermissionsModule,
             RolesModule,
             DatabasesModule,
-            SubscribersModule  
+            SubscribersModule,
+            MailModule  
             ],
   controllers: [AppController],
   providers: [AppService],
