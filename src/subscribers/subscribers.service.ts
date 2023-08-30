@@ -11,15 +11,15 @@ import { Subscriber, SubscriberDocument } from './schemas/subscriber.schema';
 
 @Injectable()
 export class SubscribersService {
-  constructor(@InjectModel(Subscriber.name) private SubscriberModel: SoftDeleteModel<SubscriberDocument>) {}
+  constructor(@InjectModel(Subscriber.name) private subscriberModel: SoftDeleteModel<SubscriberDocument>) {}
 
   async create(createSubscriberDto: CreateSubscriberDto,@User() user:IUser) {
-    const isExist = await this.SubscriberModel.findOne({email:createSubscriberDto.email});
+    const isExist = await this.subscriberModel.findOne({email:createSubscriberDto.email});
     if(isExist){
       throw new BadRequestException(`email: ${createSubscriberDto.email} đã tồn tại!`)
     }
 
-    let newSubscriber = await this.SubscriberModel.create({
+    let newSubscriber = await this.subscriberModel.create({
         ...createSubscriberDto,
         createdBy:{
           _id:user._id,
@@ -41,10 +41,10 @@ export class SubscribersService {
     let offset = (+currentpage - 1) * (+limit);
     let defaultLimit = +limit ? +limit : 10;
 
-    const totalItems = (await this.SubscriberModel.find(filter)).length;
+    const totalItems = (await this.subscriberModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
-    const result = await this.SubscriberModel.find(filter)
+    const result = await this.subscriberModel.find(filter)
     .skip(offset)
     .limit(defaultLimit)
     // @ts-ignore: Unreachable code error
@@ -65,7 +65,7 @@ export class SubscribersService {
 
   findOne(id: string) {
     if(mongoose.Types.ObjectId.isValid(id)){
-      let Subscriber = this.SubscriberModel.findOne({
+      let Subscriber = this.subscriberModel.findOne({
         _id:id
       });
       return Subscriber;
@@ -74,17 +74,18 @@ export class SubscribersService {
     }
   }
 
-  async update(id: string, updateSubscriberDto: UpdateSubscriberDto,@User() user:IUser) {
-    let newSubscriber = await this.SubscriberModel.updateOne(
-      {_id:id},
+  async update(updateSubscriberDto: UpdateSubscriberDto,user:IUser) {
+    const newSubscriber = await this.subscriberModel.updateOne(
+      {email:user.email},
       {
         ...updateSubscriberDto,
-        isActive:true,
         updatedBy:{
           _id:user._id,
           email:user.email
         }
-    })
+      },
+      {upsert:true}
+    )
 
     return {
       newSubscriber
@@ -93,7 +94,7 @@ export class SubscribersService {
 
   async remove(id: string,@User() user:IUser) {
     if(mongoose.Types.ObjectId.isValid(id)){
-      await this.SubscriberModel.updateOne(
+      await this.subscriberModel.updateOne(
           {_id:id},
           {
             deletedBy:{
@@ -103,11 +104,22 @@ export class SubscribersService {
           }
       )
 
-      return this.SubscriberModel.softDelete({
+      return this.subscriberModel.softDelete({
         _id:id
       });
     }else{
       return `Not found Subscriber`;
     }
+  }
+
+  async getSkills(@User() user:IUser) {
+     const {email} = user;
+    return await this.subscriberModel.findOne(
+        {email},
+        {
+          skills:1
+        }
+    )
+
   }
 }
