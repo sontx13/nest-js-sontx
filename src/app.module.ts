@@ -16,6 +16,7 @@ import { DatabasesModule } from './databases/databases.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { MailModule } from './mail/mail.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { HealthModule } from './health/health.module';
 
 @Module({
   //MongooseModule.forRoot('mongodb+srv://sontx13:Sonphuong1710@cluster0.bp5irmg.mongodb.net/?retryWrites=true&w=majority')
@@ -45,7 +46,8 @@ import { ScheduleModule } from '@nestjs/schedule';
             RolesModule,
             DatabasesModule,
             SubscribersModule,
-            MailModule  
+            MailModule,
+            HealthModule  
             ],
   controllers: [AppController],
   providers: [AppService],

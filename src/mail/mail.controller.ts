@@ -8,7 +8,9 @@ import { Job, JobDocument } from 'src/jobs/schemas/job.schemas';
 import { InjectModel } from '@nestjs/mongoose';
 import { Subscriber } from 'rxjs';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('mail')
 @Controller('mail')
 export class MailController {
   constructor(private readonly mailService: MailService,
