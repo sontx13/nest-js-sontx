@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipeBuilder, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipeBuilder, HttpStatus, UseFilters, HttpException } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ResponseMessage } from 'src/decorator/customize';
 import { ApiTags } from '@nestjs/swagger';
+import { HttpExceptionFilter } from 'src/core/http-exception.filter';
 
 @ApiTags('files')
 @Controller('files')
@@ -13,21 +14,26 @@ export class FilesController {
   @Post('upload')
   @ResponseMessage('Upload file')
   @UseInterceptors(FileInterceptor('fileUpload'))
-  uploadFile(@UploadedFile(
-    new ParseFilePipeBuilder()
-    .addFileTypeValidator({
-      //https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
-      fileType: /^(jpg|image\/jpeg|jpeg|png|image\/png|gif|txt|text\/plain|pdf|application\/pdf|doc|docx)$/i,
-    })
-    .addMaxSizeValidator({
-      maxSize: 1024*1024 //kb=1MB
-    })
-    .build({
-      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
-    }),
-  ) file: Express.Multer.File) {
-    return file.filename;
+  @UseFilters(new HttpExceptionFilter())
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+      return file.filename;
   }
+
+  // uploadFile(@UploadedFile(
+  //   new ParseFilePipeBuilder()
+  //   .addFileTypeValidator({
+  //     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+  //     fileType: /^(jpg|image\/jpeg|jpeg|png|image\/png|gif|txt|text\/plain|pdf|application\/pdf|doc|docx)$/i,
+  //   })
+  //   .addMaxSizeValidator({
+  //     maxSize: 1024*1024 //kb=1MB
+  //   })
+  //   .build({
+  //     errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+  //   }),
+  // ) file: Express.Multer.File) {
+  //   return file.filename;
+  // }
 
   @Get()
   findAll() {
